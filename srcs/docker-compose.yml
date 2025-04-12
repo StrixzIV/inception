@@ -1,0 +1,75 @@
+services:
+
+  mariadb:
+    container_name: mariadb
+    env_file:
+      - .env
+    environment:
+      - MYSQL_PASSWORD_FILE=
+      - MYSQL_ROOT_PASSWORD_FILE=
+    networks:
+      - inception_mainnet
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    volumes:
+      - 
+    restart: unless-stopped
+    expose:
+      - 3306
+  
+  wordpress:
+    container_name: wordpress
+    env_file:
+      - .env
+    environment:
+      - MYSQL_PASSWORD_FILE=
+      - MYSQL_ROOT_PASSWORD_FILE=
+    networks:
+      - inception_mainnet
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    volumes:
+      - 
+    restart: unless-stopped
+    expose:
+      - 3306
+  
+  nginx:
+    container_name: nginx
+    env_file:
+      - .env
+    environment:
+      - MYSQL_PASSWORD_FILE=
+      - MYSQL_ROOT_PASSWORD_FILE=
+    networks:
+      - inception_mainnet
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - 
+    restart: unless-stopped
+    expose:
+      - 3306
+
+networks:
+  inception_mainnet:
+    driver: bridge
+
+volumes:
+
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/$USER/inception/mariadb
+      o: bind
+  
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/$USER/inception/wordpress
+      o: bind
