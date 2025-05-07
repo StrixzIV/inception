@@ -12,7 +12,7 @@ connect_no_password() {
 }
 
 connect_with_password() {
-    mariadb -u root -p "$MYSQL_ROOT_PASSWORD" -e "SELECT 1;" > /dev/null 2>&1
+    mariadb -u root -p"$MYSQL_ROOT_PASSWORD" -e "SELECT 1;" > /dev/null 2>&1
 }
 
 db_init_check_no_password() {
@@ -20,19 +20,19 @@ db_init_check_no_password() {
 }
 
 db_init_check_with_password() {
-    mariadb -u root -p "$MYSQL_ROOT_PASSWORD" -e "USE $MYSQL_DATABASE;" > /dev/null 2>&1
+    mariadb -u root -p"$MYSQL_ROOT_PASSWORD" -e "USE $MYSQL_DATABASE;" > /dev/null 2>&1
 }
 
 until connect_no_password || connect_with_password; do
 
-    N_ATTEMPTS=$((N_ATTEMPTS+1))
-
-    if [ $attempt -ge $MAX_ATTEMPTS ]; then
-		echo "Cannot connect to MariaDB after $MAX_ATTEMPTS attempts. Exiting..."
+    if [ $N_ATTEMPTS -ge $N_ATTEMPTS_MAX ]; then
+		echo "Cannot connect to MariaDB after $N_ATTEMPTS_MAX attempts. Exiting..."
 		exit 1
 	fi
 
-    echo "Starting connection to MariaDB... (Attempt $N_ATTEMPTS/$MAX_ATTEMPTS)."
+    N_ATTEMPTS=$((N_ATTEMPTS+1))
+
+    echo "Starting connection to MariaDB... (Attempt $N_ATTEMPTS/$N_ATTEMPTS_MAX)."
     sleep $ATTEMPT_INTERVALS
 
 done
@@ -48,7 +48,7 @@ fi
 
 
 echo "Initialization complete. Restarting MariaDB..."
-mysqladmin -u root -p "$MYSQL_ROOT_PASSWORD" shutdown
+mysqladmin -u root -p"$MYSQL_ROOT_PASSWORD" shutdown
 
 echo "MariaDB is ready!"
 mysqld
