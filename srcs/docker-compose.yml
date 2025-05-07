@@ -73,3 +73,11 @@ volumes:
       type: none
       device: /home/$USER/inception/wordpress
       o: bind
+
+secrets:
+
+  mysql_user_password:
+    file: ../secrets/mysql_password_user
+  
+  mysql_root_password:
+    file: ../secrets/mysql_password_root
