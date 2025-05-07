@@ -75,6 +75,12 @@ else
 
 fi
 
+if [ -f "srcs/.env" ]; then
+    echo "srcs/.env already exists."
+else
+    cp srcs/.env.example srcs/.env
+fi
+
 make_password_file "MYSQL_ROOT_PASSWORD" "./secrets/mysql-root-password.txt"
 make_password_file "MYSQL_PASSWORD" "./secrets/mysql-user-password.txt"
 make_password_file "WORDPRESS_ADMIN_PASSWORD" "./secrets/wordpress-admin-password.txt"
