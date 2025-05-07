@@ -81,7 +81,7 @@ else
     cp srcs/.env.example srcs/.env
 fi
 
-make_password_file "MYSQL_ROOT_PASSWORD" "./secrets/mysql-root-password.txt"
-make_password_file "MYSQL_PASSWORD" "./secrets/mysql-user-password.txt"
-make_password_file "WORDPRESS_ADMIN_PASSWORD" "./secrets/wordpress-admin-password.txt"
-make_password_file "WORDPRESS_USER_PASSWORD" "./secrets/wordpress-user-password.txt"
+make_password_file "MYSQL_ROOT_PASSWORD" "./secrets/mysql-root-password"
+make_password_file "MYSQL_PASSWORD" "./secrets/mysql-user-password"
+make_password_file "WORDPRESS_ADMIN_PASSWORD" "./secrets/wordpress-admin-password"
+make_password_file "WORDPRESS_USER_PASSWORD" "./secrets/wordpress-user-password"
