@@ -65,7 +65,7 @@ services:
     restart: always
     depends_on:
       - wordpress
-    expose:
+    ports:
       - "443:443"
 
 networks:
@@ -78,14 +78,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: $(PWD)/../data/mariadb
+      device: $(PWD)/../../data/mariadb
       o: bind
   
   wordpress:
     driver: local
     driver_opts:
       type: none
-      device: $(PWD)/../data/wordpress
+      device: $(PWD)/../../data/wordpress
       o: bind
 
 secrets:
