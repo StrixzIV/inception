@@ -5,15 +5,18 @@ services:
     env_file:
       - .env
     environment:
-      - MYSQL_PASSWORD_FILE=
-      - MYSQL_ROOT_PASSWORD_FILE=
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_user_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
     networks:
       - inception_mainnet
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
     volumes:
-      - 
+      - mariadb:/var/lib/mysql
+    secrets:
+      - mysql_user_password
+      - mysql_root_password
     restart: unless-stopped
     expose:
       - 3306
@@ -23,36 +26,47 @@ services:
     env_file:
       - .env
     environment:
-      - MYSQL_PASSWORD_FILE=
-      - MYSQL_ROOT_PASSWORD_FILE=
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_user_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+      - WORDPRESS_ADMIN_PASSWORD_FILE=/run/secrets/wordpress_admin_password
+      - WORDPRESS_USER_PASSWORD_FILE=/run/secrets/wordpress_user_password
     networks:
       - inception_mainnet
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
     volumes:
-      - 
-    restart: unless-stopped
+      - wordpress:/var/www/html
+    secrets:
+      - mysql_user_password
+      - mysql_root_password
+      - wordpress_user_password
+      - wordpress_admin_password
+    restart: always
+    depends_on:
+      - mariadb
     expose:
-      - 3306
+      - 9000
   
   nginx:
     container_name: nginx
     env_file:
       - .env
-    environment:
-      - MYSQL_PASSWORD_FILE=
-      - MYSQL_ROOT_PASSWORD_FILE=
     networks:
       - inception_mainnet
     build:
       context: ./requirements/nginx
       dockerfile: Dockerfile
     volumes:
-      - 
-    restart: unless-stopped
+      - wordpress:/var/www/html
+    secrets:
+      - ssl_key
+      - ssl_certificate
+    restart: always
+    depends_on:
+      - wordpress
     expose:
-      - 3306
+      - "443:443"
 
 networks:
   inception_mainnet:
@@ -64,20 +78,32 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/$USER/inception/mariadb
+      device: $(PWD)/../data/mariadb
       o: bind
   
   wordpress:
     driver: local
     driver_opts:
       type: none
-      device: /home/$USER/inception/wordpress
+      device: $(PWD)/../data/wordpress
       o: bind
 
 secrets:
 
   mysql_user_password:
-    file: ../secrets/mysql_password_user
+    file: ../secrets/mysql-user-password
   
   mysql_root_password:
-    file: ../secrets/mysql_password_root
+    file: ../secrets/mysql-root-password
+    
+  wordpress_user_password:
+    file: ../secrets/wordpress-user-password
+  
+  wordpress_admin_password:
+    file: ../secrets/wordpress-admin-password
+
+  ssl_key:
+    file: ../secrets/ssl/nginx-selfsigned.key
+  
+  ssl_certificate:
+    file: ../secrets/ssl/nginx-selfsigned.crt
