@@ -11,3 +11,8 @@ setup:
 start:
 	@echo "Starting docker-compose"
 	docker-compose --env-file $(DOTENV_PATH) -f $(DOCKER_COMPOSE_PATH) up
+
+fclean:
+	@rm -f srcs/.env
+	@rm -f secrets/*-password.txt
+	@rm -rf secrets/ssl
