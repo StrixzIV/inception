@@ -42,6 +42,6 @@ if mysqladmin ping -h mariadb --silent; then
 
 else
 	echo "Cannot connect to MariaDB. Please try again."
-    sleep 5
+    sleep 0.5
 	exit 1
 fi
