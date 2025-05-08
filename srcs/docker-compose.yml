@@ -1,5 +1,6 @@
 services:
 
+  # Mandatory
   mariadb:
     container_name: mariadb
     env_file:
@@ -67,6 +68,16 @@ services:
       - wordpress
     ports:
       - "443:443"
+
+  # Bonus
+  adminer:
+    container_name: adminer
+    env_file:
+      - .env
+    networks:
+      - inception_mainnet  
+    build:
+      context: ./requirements/bonus/adminer
 
 networks:
   inception_mainnet:
