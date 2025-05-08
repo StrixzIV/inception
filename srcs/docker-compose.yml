@@ -78,6 +78,24 @@ services:
       - inception_mainnet  
     build:
       context: ./requirements/bonus/adminer
+  
+  ftp:
+    container_name: ftp
+    env_file:
+      - .env
+    networks:
+      - inception_mainnet  
+    build:
+      context: ./requirements/bonus/ftp
+    volumes:
+      - wordpress:/home/wpuser/wp-content
+    secrets:
+      - ftp_password
+    depends_on:
+      - wordpress
+    ports:
+      - "21:21"
+      - "44444-44454:44444-44454"
 
 networks:
   inception_mainnet:
@@ -89,14 +107,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: data/mariadb
+      device: ../data/mariadb
       o: bind
   
   wordpress:
     driver: local
     driver_opts:
       type: none
-      device: data/wordpress
+      device: ../data/wordpress
       o: bind
 
 secrets:
@@ -112,6 +130,9 @@ secrets:
   
   wordpress_admin_password:
     file: ../secrets/wordpress-admin-password
+
+  ftp_password:
+    file: ../secrets/ftp-password
 
   ssl_key:
     file: ../secrets/ssl/nginx-selfsigned.key
