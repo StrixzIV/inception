@@ -66,6 +66,8 @@ services:
       - ssl_certificate
     restart: always
     depends_on:
+      - adminer
+      - portfolio
       - wordpress
     ports:
       - "443:443"
@@ -106,6 +108,15 @@ services:
       context: ./requirements/bonus/redis
     expose:
       - 6379
+  
+  portfolio:
+    container_name: portfolio
+    networks:
+      - inception_mainnet  
+    build:
+      context: ./requirements/bonus/portfolio
+    expose:
+      - 8080
 
 networks:
   inception_mainnet:

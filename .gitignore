@@ -4,3 +4,4 @@ secrets/*
 !secrets/.gitkeep
 
 data
+.DS_Store
