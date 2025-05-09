@@ -25,8 +25,7 @@ function generate_password_secrets() {
 
         if [[ "$password" == "$password_confirm" ]]; then
             echo "$password" > "$target_path"
-            echo "$user=$password" >> ./srcs/.env
-            echo "Password has been write to srcs/.env and $target_path."
+            echo "Password has been write to $target_path."
             break
 
         else
