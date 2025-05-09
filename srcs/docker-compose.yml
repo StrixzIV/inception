@@ -46,6 +46,7 @@ services:
     restart: always
     depends_on:
       - mariadb
+      - redis
     expose:
       - 9000
   
@@ -88,7 +89,7 @@ services:
     build:
       context: ./requirements/bonus/ftp
     volumes:
-      - wordpress:/home/wpuser/wp-content
+      - wordpress:/var/www/html
     secrets:
       - ftp_password
     depends_on:
@@ -96,6 +97,15 @@ services:
     ports:
       - "21:21"
       - "44444-44454:44444-44454"
+
+  redis:
+    container_name: redis
+    networks:
+      - inception_mainnet  
+    build:
+      context: ./requirements/bonus/redis
+    expose:
+      - 6379
 
 networks:
   inception_mainnet:
@@ -107,14 +117,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ../data/mariadb
+      device: data/mariadb
       o: bind
   
   wordpress:
     driver: local
     driver_opts:
       type: none
-      device: ../data/wordpress
+      device: data/wordpress
       o: bind
 
 secrets:

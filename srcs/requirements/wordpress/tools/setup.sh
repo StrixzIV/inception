@@ -1,5 +1,7 @@
 #!/bin/bash
 
+REDIS_PORT=6379
+
 if mysqladmin ping -h mariadb --silent; then
 
 	echo "Succesfully connected to MariaDB. Initating Wordpress setup..."
@@ -35,6 +37,27 @@ if mysqladmin ping -h mariadb --silent; then
 		echo "User '$WORDPRESS_USER' has been created."
 
 	fi
+
+	echo "Successfully connected to Redis via PHP!"
+	rm -f /var/www/html/wp-content/object-cache.php
+
+	# Install Redis plugin
+	wp plugin install redis-cache --activate --allow-root --path=/var/www/html
+
+	# Add Redis config to wp-config.php if not already present
+	if ! grep -q "WP_REDIS_HOST" wp-config.php; then
+		echo "Configuring Redis settings in wp-config.php..."
+		cat <<EOT >> wp-config.php
+
+// Redis settings
+define( 'WP_REDIS_HOST', 'localhost' );
+define( 'WP_REDIS_PORT', $REDIS_PORT );
+define( 'WP_REDIS_DISABLED', false );
+EOT
+	fi
+
+	# Enable Redis object cache
+	wp redis enable --allow-root --path=/var/www/html
 
 	wp plugin update --all --allow-root --path=/var/www/html
 	chown -R www-data:www-data /var/www/html

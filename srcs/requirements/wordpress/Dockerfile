@@ -5,7 +5,7 @@ EXPOSE 9000
 WORKDIR /var/www/html
 
 RUN apt update && apt upgrade -y
-RUN apt install wget php php7.4-fpm php7.4-mysql mariadb-client -y
+RUN apt install wget php php7.4-fpm php7.4-mysql mariadb-client redis-tools php-redis -y
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /run/php && \
