@@ -38,23 +38,20 @@ if mysqladmin ping -h mariadb --silent; then
 
 	fi
 
-	echo "Successfully connected to Redis via PHP!"
-	rm -f /var/www/html/wp-content/object-cache.php
-
 	# Install Redis plugin
 	wp plugin install redis-cache --activate --allow-root --path=/var/www/html
 
-	# Add Redis config to wp-config.php if not already present
-	if ! grep -q "WP_REDIS_HOST" wp-config.php; then
-		echo "Configuring Redis settings in wp-config.php..."
-		cat <<EOT >> wp-config.php
+    echo "Adding redis constants to wp-config"
+    if ! grep -q "WP_REDIS_HOST" wp-config.php; then
+        sed -i "/\/\* That's all, stop editing! Happy publishing. \*\//i define('WP_REDIS_HOST', 'redis');\ndefine('WP_REDIS_PORT', $REDIS_PORT);\n" wp-config.php
+    fi
 
-// Redis settings
-define( 'WP_REDIS_HOST', 'localhost' );
-define( 'WP_REDIS_PORT', $REDIS_PORT );
-define( 'WP_REDIS_DISABLED', false );
-EOT
-	fi
+    until redis-cli -h "redis" -p "$REDIS_PORT" ping | grep -q PONG; do
+        echo "Waiting for Redis to be ready..."
+        sleep 1
+    done
+
+	echo "Successfully connected to Redis via PHP!"
 
 	# Enable Redis object cache
 	wp redis enable --allow-root --path=/var/www/html
