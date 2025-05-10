@@ -81,6 +81,7 @@ services:
       - inception_mainnet  
     build:
       context: ./requirements/bonus/adminer
+    restart: unless-stopped
   
   ftp:
     container_name: ftp
@@ -94,6 +95,7 @@ services:
       - wordpress:/var/www/html
     secrets:
       - ftp_password
+    restart: unless-stopped
     depends_on:
       - wordpress
     ports:
@@ -106,6 +108,7 @@ services:
       - inception_mainnet  
     build:
       context: ./requirements/bonus/redis
+    restart: unless-stopped
     expose:
       - 6379
   
@@ -115,6 +118,7 @@ services:
       - inception_mainnet  
     build:
       context: ./requirements/bonus/portfolio
+    restart: unless-stopped
     expose:
       - 8080
 
