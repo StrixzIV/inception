@@ -2,6 +2,10 @@
 
 REDIS_PORT=6379
 
+MYSQL_PASSWORD=$(cat /run/secrets/mysql_user_password)
+WORDPRESS_USER_PASSWORD=$(cat /run/secrets/wordpress_user_password)
+WORDPRESS_ADMIN_PASSWORD=$(cat /run/secrets/wordpress_admin_password)
+
 if mysqladmin ping -h mariadb --silent; then
 
 	echo "Succesfully connected to MariaDB. Initating Wordpress setup..."

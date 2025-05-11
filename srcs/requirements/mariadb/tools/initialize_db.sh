@@ -1,5 +1,8 @@
 #!/bin/bash
 
+MYSQL_PASSWORD=$(cat /run/secrets/mysql_user_password)
+MYSQL_ROOT_PASSWORD=$(cat /run/secrets/mysql_root_password)
+
 mariadb -u root -e "ALTER USER 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
 mariadb -u root -p"$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"
 
