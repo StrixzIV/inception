@@ -120,6 +120,21 @@ services:
       context: ./requirements/bonus/portfolio
     restart: unless-stopped
     expose:
+      - 6969
+
+  cadvisor:
+    container_name: cadvisor
+    build:
+      context: ./requirements/bonus/cadvisor
+    networks:
+      - inception_mainnet
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped
+    expose:
       - 8080
 
 networks:
