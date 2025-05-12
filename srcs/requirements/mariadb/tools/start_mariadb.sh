@@ -51,4 +51,4 @@ echo "Initialization complete. Restarting MariaDB..."
 mysqladmin -u root -p"$MYSQL_ROOT_PASSWORD" shutdown
 
 echo "MariaDB is ready!"
-mysqld
+exec mysqld
